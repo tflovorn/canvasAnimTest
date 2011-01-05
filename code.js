@@ -1,17 +1,18 @@
-var canvas, width, height, image;
+var frameRate = 12, numFrames = 24, frameIndex = 0;
+var imageList, canvas;
 
-function initCanvas() {
-    width = canvas.width;
-    height = canvas.height;
-    var img = new Image();
-    img.addEventListener("load", function() {
-        canvas.drawImage(this, 0, 0);
-    }, false);
-    img.src = "rickroll/rickroll0.png"
+function loadImages(basePath, extension) {
+    imageList = new Array();
+    for (var i = 0; i < numFrames; i++) {
+        var img = new Image();
+        img.src = basePath + i.toString() + "." + extension;
+        imageList.push(img);
+    }
 }
 
 function update() {
-
+    canvas.drawImage(imageList[frameIndex], 0, 0);
+    frameIndex = (frameIndex + 1) % numFrames;
 }
 
 window.addEventListener("load", function() {
@@ -21,6 +22,7 @@ window.addEventListener("load", function() {
         return;
     }
     canvas = document.getElementById("canvas").getContext("2d");
-    initCanvas();
-    setInterval(update, 35);
+    loadImages("rickroll/rickroll", "png");
+    update();
+    setInterval(update, 1000 / frameRate);
 }, false);
